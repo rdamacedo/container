@@ -143,7 +143,7 @@ void ht_set(hashtable_t *hashtable, void *_key, void *_value) {
 }
 
 /* Retrieve a key-value pair from a hash table. */
-char *ht_get(hashtable_t *hashtable, char *key) {
+char *ht_get(hashtable_t *hashtable, const char *key) {
     int bin = 0;
     entry_t *pair;
 
@@ -162,5 +162,16 @@ char *ht_get(hashtable_t *hashtable, char *key) {
     } else {
         return pair->value;
     }
+}
 
+const char *type_to_string(Type type) {
+    switch (type) {
+        case Type::STRING:
+            return "string";
+        case Type::FLOAT:
+            return "float";
+        case Type::INT:
+            return "int";
+    }
+    return "NOT IMPLEMENTED";
 }
