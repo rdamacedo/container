@@ -75,7 +75,7 @@ entry_t *ht_newpair(hashtable_t *hashtable, void *_key, void *_value) {
     return newpair;
 }
 
-const char *from_void_pointer_to_const_char(const void *_key, const Type &key_type) {
+const char *from_void_pointer_to_const_char(void *_key, const Type &key_type) {
     const char *key;
     switch (key_type) {
         case Type::STRING: {

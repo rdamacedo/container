@@ -1,19 +1,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-#include <string.h>
+#include <string>
 #include "hashtable/Hashtable.h"
 
 
 int main(int argc, char **argv) {
 
-    hashtable_t *hashtable = ht_create(65536, Type::FLOAT, Type::STRING);
+    hashtable_t *hashtable = ht_create(65536, Type::STRING, Type::STRING);
 
 
-    ht_set(hashtable, "key1", "inky");
-    ht_set(hashtable, "key2", "pinky");
-    ht_set(hashtable, "key3", "blinky");
-    ht_set(hashtable, "key4", "floyd");
+    ht_set(hashtable, static_cast<void *>(new std::string("key1")), static_cast<void *>(new std::string("inky")));
+    ht_set(hashtable, static_cast<void *>(new std::string("key2")), static_cast<void *>(new std::string("pinky")));
+    ht_set(hashtable, static_cast<void *>(new std::string("key3")), static_cast<void *>(new std::string("blinky")));
+    ht_set(hashtable, static_cast<void *>(new std::string("key4")), static_cast<void *>(new std::string("floyd")));
 
 
     printf("Key_type: %c\n", hashtable->key_type);
