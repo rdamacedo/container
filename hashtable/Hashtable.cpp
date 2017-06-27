@@ -5,6 +5,7 @@
 #include <string>
 #include "Hashtable.h"
 
+entry_t *cached_pair;
 
 /* Create a new hashtable. */
 hashtable_t *ht_create(int size, Type key_type, Type value_type) {
@@ -38,17 +39,9 @@ hashtable_t *ht_create(int size, Type key_type, Type value_type) {
 /* Hash a string for a particular hash table. */
 int ht_hash(hashtable_t *hashtable, const char *key) {
 
-    int hashval;
-    int i = 0;
+    size_t hashval = std::hash<std::string>{}(key) % hashtable->size;
 
-    /* Convert our string to an integer */
-    while (hashval < INT_MAX && i < strlen(key)) {
-        hashval = hashval << 8;
-        hashval += key[i];
-        i++;
-    }
-
-    return hashval % hashtable->size;
+    return hashval < 0 ? hashval + hashtable->size : hashval;
 }
 
 
@@ -109,6 +102,8 @@ void ht_set(hashtable_t *hashtable, void *_key, void *_value) {
 
     bin = ht_hash(hashtable, key);
 
+    printf("Bin in use %d\n", bin);
+
     next = hashtable->table[bin];
 
 
@@ -127,8 +122,12 @@ void ht_set(hashtable_t *hashtable, void *_key, void *_value) {
         next->value = strdup(value);
 
         /* Nope, could't find it.  Time to grow a pair. */
-    } else if (i >= hashtable->size) {
-        printf("Should replace first node");
+    } else if (i > hashtable->size) {
+        ht_get(hashtable, key);
+        printf("Replaced key:%s  |", cached_pair->key);
+        printf("Should replace bin node\n");
+        cached_pair->key = strdup(key);
+        cached_pair->value = strdup(value);
     } else {
         newpair = ht_newpair(hashtable, _key, _value);
 
@@ -140,7 +139,6 @@ void ht_set(hashtable_t *hashtable, void *_key, void *_value) {
             /* We're at the end of the linked list in this bin. */
         } else if (next == NULL) {
             last->next = newpair;
-
             /* We're in the middle of the list. */
         } else {
             newpair->next = next;
@@ -167,6 +165,7 @@ char *ht_get(hashtable_t *hashtable, const char *key) {
         return NULL;
 
     } else {
+        cached_pair = pair;
         return pair->value;
     }
 }

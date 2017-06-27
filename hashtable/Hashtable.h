@@ -24,7 +24,7 @@ struct entry_s {
 };
 
 typedef struct entry_s entry_t;
-
+//TODO: SHOULD USE LINKED LIST?
 struct hashtable_s {
     int size;
     Type key_type;
