@@ -31,6 +31,7 @@ hashtable_t *ht_create(int size, Type key_type, Type value_type) {
     hashtable->key_type = key_type;
     hashtable->value_type = value_type;
 
+
     return hashtable;
 }
 
@@ -84,13 +85,13 @@ const char *from_void_pointer_to_const_char(void *_key, const Type &key_type) {
         }
             break;
         case Type::FLOAT: {
-            float *f_key = static_cast<float *>(_key);
-            key = std::to_string(*f_key).c_str();
+            std::string *s_key = static_cast<std::string *>(_key);
+            key = std::to_string(atof(s_key->c_str())).c_str();
         }
             break;
         case Type::INT:
-            int *i_key = static_cast<int *>(_key);
-            key = std::to_string(*i_key).c_str();
+            std::string *s_key = static_cast<std::string *>(_key);
+            key = std::to_string(atoi(s_key->c_str())).c_str();
             break;
     }
     return key;
@@ -110,10 +111,14 @@ void ht_set(hashtable_t *hashtable, void *_key, void *_value) {
 
     next = hashtable->table[bin];
 
+
+    int i = 0;
     while (next != NULL && next->key != NULL && strcmp(key, next->key) > 0) {
         last = next;
         next = next->next;
+        i++;
     }
+
 
     /* There's already a pair.  Let's replace that string. */
     if (next != NULL && next->key != NULL && strcmp(key, next->key) == 0) {
@@ -122,6 +127,8 @@ void ht_set(hashtable_t *hashtable, void *_key, void *_value) {
         next->value = strdup(value);
 
         /* Nope, could't find it.  Time to grow a pair. */
+    } else if (i >= hashtable->size) {
+        printf("Should replace first node");
     } else {
         newpair = ht_newpair(hashtable, _key, _value);
 
@@ -174,4 +181,14 @@ const char *type_to_string(Type type) {
             return "int";
     }
     return "NOT IMPLEMENTED";
+}
+
+Type string_to_type(const std::string &type) {
+    if (!type.compare("float")) {
+        return Type::FLOAT;
+    } else if (!type.compare("int")) {
+        return Type::INT;
+    } else {
+        return Type::STRING;
+    }
 }

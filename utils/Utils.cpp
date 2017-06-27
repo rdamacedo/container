@@ -84,3 +84,77 @@ bool check_value_type(Type type, std::string &value) {
     }
     return true;
 }
+
+void print_container_not_found(std::string &container_name, std::string &line) {
+    printf("Requested container doesn't exist: %s\n", container_name.c_str());
+    printf("Your command : %s\n", line.c_str());
+}
+
+void print_create_command_malformation(std::string &line) {
+    printf("Error when parsing the following command, please double check %s\n", line.c_str());
+    print_command_usage();
+}
+
+bool parse_key_input(std::vector<std::string> &command_vector,
+                     std::string &parsed_key_command, std::string &line) {
+
+    std::vector<std::string> key_command;
+    if (command_vector.size() > 2) {
+        split(command_vector[2], key_command, '=');
+    } else {
+        print_create_command_malformation(line);
+        return false;
+    }
+
+    parsed_key_command = key_command.size() > 1 ? key_command[1] : "";
+
+    if (parsed_key_command.empty()) {
+        print_create_command_malformation(line);
+        return false;
+    }
+    return true;
+}
+
+bool parse_value_input(std::vector<std::string> &command_vector,
+                       std::string &parsed_key_command, std::string &line) {
+
+    std::vector<std::string> key_command;
+    if (command_vector.size() > 3) {
+        split(command_vector[3], key_command, '=');
+    } else {
+        print_create_command_malformation(line);
+        return false;
+    }
+
+    parsed_key_command = key_command.size() > 1 ? key_command[1] : "";
+
+    if (parsed_key_command.empty()) {
+        print_create_command_malformation(line);
+        return false;
+    }
+    return true;
+}
+
+bool parse_size_input(std::vector<std::string> &command_vector,
+                      int &size, std::string &line) {
+
+    std::vector<std::string> command;
+    size = -1;
+    if (command_vector.size() > 4) {
+        split(command_vector[4], command, '=');
+    } else {
+        print_create_command_malformation(line);
+        return false;
+    }
+
+    if (command.size() > 1 && is_int(command[1])) {
+        size = atoi(command[1].c_str());
+    }
+
+    if (size < 1) {
+        print_create_command_malformation(line);
+        return false;
+    }
+    return true;
+}
+

@@ -10,6 +10,7 @@
 #include <limits.h>
 #include <string.h>
 
+//FIXME: Bad name
 enum class Type : char {
     FLOAT = 'f',
     INT = 'i',
@@ -34,6 +35,8 @@ struct hashtable_s {
 typedef struct hashtable_s hashtable_t;
 
 const char *type_to_string(Type type);
+
+Type string_to_type(const std::string &type);
 
 hashtable_t *ht_create(int size, Type key_type, Type value_type);
 
