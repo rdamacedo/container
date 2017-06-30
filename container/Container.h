@@ -3,27 +3,53 @@
 
 
 #include <string>
-#include "../hashtable/Hashtable.h"
+#include "../hashtable/HashTable.h"
 #include "../utils/Utils.h"
-
 
 class Container {
 
-public:
-    std::string name;
-    std::string key_type;
-    std::string value_type;
-    int size;
 
-    Container(const std::string &name, const std::string &key_type, const std::string &value_type, int size);
+public:
+
+    Container(std::string name, InternalType keyType, InternalType valueType, size_t tableSize);
+
+    virtual ~Container();
 
     bool set_pair(std::string &line, std::vector<std::string> &command_vector);
 
     std::string get_value(std::string &key);
 
-private:
-    hashtable_t *data;
+    std::string &getName() {
+        return _name;
+    };
 
+    InternalType getKeyType() {
+        return _keyType;
+    }
+
+    InternalType getValueType() {
+        return _keyType;
+    }
+
+
+private:
+    HashTable<std::string, std::string, KeyHash<std::string>> *stringStringTable;
+    HashTable<std::string, float, KeyHash<std::string>> *stringFloatTable;
+    HashTable<std::string, int, KeyHash<std::string>> *stringIntTable;
+    HashTable<float, float, FloatKeyHash> *floatFloatTable;
+    HashTable<float, int, FloatKeyHash> *floatIntTable;
+    HashTable<float, std::string, FloatKeyHash> *floatStringTable;
+    HashTable<int, float, KeyHash<int>> *intFloatTable;
+    HashTable<int, int, KeyHash<int>> *intIntTable;
+    HashTable<int, std::string, KeyHash<int>> *intStringTable;
+    InternalType _keyType;
+    InternalType _valueType;
+    size_t _tableSize;
+    std::string _name;
+
+    Container(const Container &p);
+
+    Container &operator=(const Container &p);
 };
 
 

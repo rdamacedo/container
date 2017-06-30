@@ -1,9 +1,5 @@
-//
-// Created by Renan Macedo on 26/06/17.
-//
-
-
 #include "Utils.h"
+
 
 unsigned long split(const std::string &txt, std::vector<std::string> &strs, char ch) {
     unsigned long pos = txt.find(ch);
@@ -29,9 +25,34 @@ void print_command_usage() {
     //TODO: Implement command usage
 }
 
-void print_not_right_type(Type &type, std::string &line) {
-    printf("You are trying to insert the wrong type you should use : %s\n", type_to_string(type));
+void print_not_right_type(InternalType &type, std::string &line) {
+    printf("You are trying to insert the wrong type you should use : %s\n", type2string(type));
     printf("Your command : %s\n", line.c_str());
+}
+
+const char *type2string(InternalType &type) {
+    switch (type) {
+        case InternalType::FLOAT :
+            return TYPE_FLOAT_STRING;
+        case InternalType::INT :
+            return TYPE_INT_STRING;
+        case InternalType::STRING:
+            return TYPE_STRING_STRING;
+        case InternalType::NOT_KNOWN:
+            return "NOT_KNOWN";
+    }
+}
+
+InternalType string2type(std::string &type) {
+    std::transform(type.begin(), type.end(), type.begin(), ::tolower);
+    if (!type.compare("string")) {
+        return InternalType::STRING;
+    } else if (!type.compare("int")) {
+        return InternalType::INT;
+    } else if (!type.compare("float")) {
+        return InternalType::FLOAT;
+    }
+    return InternalType::NOT_KNOWN;
 }
 
 bool check_add_command_formation(std::vector<std::string> &command, std::string &line) {
@@ -43,16 +64,16 @@ bool check_add_command_formation(std::vector<std::string> &command, std::string 
     return true;
 }
 
-bool is_float(std::string &myString) {
-    std::istringstream iss(myString);
+bool is_float(std::string &input) {
+    std::istringstream iss(input);
     float f;
     iss >> f;
     // Check the entire string was consumed and if either failbit or badbit is set
     return iss.eof() && !iss.fail();
 }
 
-bool is_int(std::string &myString) {
-    std::istringstream iss(myString);
+bool is_int(std::string &input) {
+    std::istringstream iss(input);
     int f;
     iss >> f;
     // Check the entire string was consumed and if either failbit or badbit is set
@@ -71,16 +92,22 @@ void clear_special_chars(std::vector<std::string> &command_vector,
     }
 }
 
-bool check_value_type(Type type, std::string &value) {
+bool check_value_type(InternalType type, std::string &value) {
     switch (type) {
-        case Type::FLOAT :
+        case InternalType::FLOAT :
             if (!is_float(value)) {
                 return false;
             }
-        case Type::INT:
+            break;
+        case InternalType::INT:
             if (!is_int(value)) {
                 return false;
             }
+            break;
+        case InternalType::STRING:
+            return !value.empty();
+        case InternalType::NOT_KNOWN:
+            return false;
     }
     return true;
 }
@@ -96,7 +123,7 @@ void print_create_command_malformation(std::string &line) {
 }
 
 bool parse_key_input(std::vector<std::string> &command_vector,
-                     std::string &parsed_key_command, std::string &line) {
+                     InternalType &parsed_key_command, std::string &line) {
 
     std::vector<std::string> key_command;
     if (command_vector.size() > 2) {
@@ -106,9 +133,9 @@ bool parse_key_input(std::vector<std::string> &command_vector,
         return false;
     }
 
-    parsed_key_command = key_command.size() > 1 ? key_command[1] : "";
+    if (key_command.size() > 1) { parsed_key_command = string2type(key_command[1]); }
 
-    if (parsed_key_command.empty()) {
+    if (parsed_key_command == InternalType::NOT_KNOWN) {
         print_create_command_malformation(line);
         return false;
     }
@@ -116,7 +143,7 @@ bool parse_key_input(std::vector<std::string> &command_vector,
 }
 
 bool parse_value_input(std::vector<std::string> &command_vector,
-                       std::string &parsed_key_command, std::string &line) {
+                       InternalType &parsed_key_command, std::string &line) {
 
     std::vector<std::string> key_command;
     if (command_vector.size() > 3) {
@@ -126,9 +153,9 @@ bool parse_value_input(std::vector<std::string> &command_vector,
         return false;
     }
 
-    parsed_key_command = key_command.size() > 1 ? key_command[1] : "";
+    if (key_command.size() > 1) { parsed_key_command = string2type(key_command[1]); }
 
-    if (parsed_key_command.empty()) {
+    if (parsed_key_command == InternalType::NOT_KNOWN) {
         print_create_command_malformation(line);
         return false;
     }
