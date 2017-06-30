@@ -3,5 +3,11 @@ project(containers)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp hashtable/Hashtable.cpp hashtable/Hashtable.h utils/Utils.cpp utils/Utils.h container/Container.cpp container/Container.h)
+set(SOURCE_FILES main.cpp
+                    utils/Utils.cpp utils/Utils.h
+                    container/Container.cpp
+                    container/Container.h
+                    hashtable/Entry.h
+                    hashtable/HashTable.h
+                    hashtable/HashKey.h)
 add_executable(containers ${SOURCE_FILES})

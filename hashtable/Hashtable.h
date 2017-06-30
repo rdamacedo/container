@@ -1,53 +1,120 @@
-//
-// Created by Renan Macedo on 26/06/17.
-//
-
 #ifndef CONTAINERS_HASHTABLE_H
 #define CONTAINERS_HASHTABLE_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <limits.h>
-#include <string.h>
+#include <cstddef>
+#include <cstdlib>
+#include "Entry.h"
+#include "HashKey.h"
 
-//FIXME: Bad name
-enum class Type : char {
-    FLOAT = 'f',
-    INT = 'i',
-    STRING = 's'
+
+// Hash map class template
+template<typename K, typename V, typename F>
+class HashTable {
+public:
+    HashTable(size_t tableSize) :
+            table(),
+            hashFunc(),
+            tableSize(tableSize) {
+
+        table = (Entry<K, V> **) malloc(sizeof(Entry<K, V> *) * tableSize);
+        for (int i = 0; i < tableSize; i++) {
+            table[i] = NULL;
+        }
+
+    }
+
+    HashTable() {
+        table = (Entry<K, V> **) malloc(sizeof(Entry<K, V> *) * UINT64_MAX);
+        for (int i = 0; i < tableSize; i++) {
+            table[i] = NULL;
+        }
+    }
+
+    ~HashTable() {
+        // destroy all buckets one by one
+        for (size_t i = 0; i < tableSize; ++i) {
+            Entry<K, V> *entry = table[i];
+
+            while (entry != NULL) {
+                Entry<K, V> *prev = entry;
+                entry = entry->getNext();
+                delete prev;
+            }
+
+            table[i] = NULL;
+        }
+
+        free(table);
+    }
+
+    bool get(const K &key, V &value) {
+        unsigned long hashValue = hashFunc(key, tableSize);
+
+        int i = 0;
+        while (table[hashValue] != NULL && i < tableSize) {
+            if (table[hashValue]->getKey() == key) {
+                value = table[hashValue]->getValue();
+                return true;
+            }
+
+            hashValue = (hashValue + 1) % tableSize;
+            i++;
+        }
+
+        return false;
+    }
+
+    void put(const K &key, const V &value) {
+        unsigned long hashValue = hashFunc(key, tableSize);
+        Entry<K, V> *entry = table[hashValue];
+
+        int i = 0;
+        while (table[hashValue] != NULL && table[hashValue]->getKey() != key && i < tableSize) {
+            hashValue = (hashValue + 1) % tableSize;
+            i++;
+        }
+
+        if (table[hashValue] != NULL)
+            delete table[hashValue];
+
+        table[hashValue] = new Entry<K, V>(key, value);
+    }
+
+    void remove(const K &key) {
+        unsigned long hashValue = hashFunc(key);
+        Entry<K, V> *prev = NULL;
+        Entry<K, V> *entry = table[hashValue];
+
+        while (entry != NULL && entry->getKey() != key) {
+            prev = entry;
+            entry = entry->getNext();
+        }
+
+        if (entry == NULL) {
+            // key not found
+            return;
+
+        } else {
+            if (prev == NULL) {
+                // remove first bucket of the list
+                table[hashValue] = entry->getNext();
+
+            } else {
+                prev->setNext(entry->getNext());
+            }
+
+            delete entry;
+        }
+    }
+
+private:
+    HashTable(const HashTable &other);
+
+    const HashTable &operator=(const HashTable &other);
+
+    size_t tableSize;
+    Entry<K, V> **table;
+    F hashFunc;
 };
-
-struct entry_s {
-    char *key;
-    char *value;
-    struct entry_s *next;
-};
-
-typedef struct entry_s entry_t;
-//TODO: SHOULD USE LINKED LIST?
-struct hashtable_s {
-    int size;
-    Type key_type;
-    Type value_type;
-    struct entry_s **table;
-};
-
-typedef struct hashtable_s hashtable_t;
-
-const char *type_to_string(Type type);
-
-Type string_to_type(const std::string &type);
-
-hashtable_t *ht_create(int size, Type key_type, Type value_type);
-
-int ht_hash(hashtable_t *hashtable, const char *key);
-
-entry_t *ht_newpair(hashtable_t *hashtable, void *_key, void *_value);
-
-void ht_set(hashtable_t *hashtable, void *_key, void *_value);
-
-char *ht_get(hashtable_t *hashtable, const char *key);
-
-const char *from_void_pointer_to_const_char(void *_key, const Type &key_type);
 
 #endif //CONTAINERS_HASHTABLE_H

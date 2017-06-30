@@ -3,13 +3,11 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "utils/Utils.h"
+
 #include "container/Container.h"
 
 
-//TODO: Use template in hashtable
-//TODO: USE Variant in hashtable
-//TODO: Use template in container
+//TODO: USE Variant in hashtable?
 //TODO: Macro to logs
 void print_insert_command() {
     printf("Please insert command:");
@@ -32,8 +30,8 @@ int main(int argc, char **argv) {
         unsigned long command_size = split(line, command_vector, ' ');
 
         if (!command_vector[0].compare(CREATE)) {
-            std::string key_type;
-            std::string value_type;
+            InternalType key_type = InternalType::NOT_KNOWN;
+            InternalType value_type = InternalType::NOT_KNOWN;
             int size;
 
             if (!parse_key_input(command_vector, key_type, line)) {
@@ -51,7 +49,7 @@ int main(int argc, char **argv) {
                 continue;
             }
 
-            Container *_container = new Container(command_vector[1], key_type, value_type, size);
+            Container *_container = new Container(command_vector[1], key_type, value_type, (size_t) size);
             containers.push_back(_container);
 
             print_insert_command();
@@ -61,7 +59,7 @@ int main(int argc, char **argv) {
         Container *container = NULL;
         if (command_vector.size() > 1) {
             for (std::vector<Container *>::iterator it = containers.begin(); it != containers.end(); ++it) {
-                if (!(*it)->name.compare(command_vector[1])) {
+                if (!(*it)->getName().compare(command_vector[1])) {
                     container = (Container *) (*it);
                     break;
                 }
@@ -94,6 +92,13 @@ int main(int argc, char **argv) {
             continue;
         } else if (!command_vector[0].compare(DESTROY)) {
 
+            for (std::vector<Container *>::iterator it = containers.begin(); it != containers.end(); ++it) {
+                if (!(*it)->getName().compare(command_vector[1])) {
+                    it = containers.erase(it);
+                    break;
+                }
+            }
+            printf("Container with name %s was erased.", command_vector[1]);
         }
         command_vector.clear();
     }
