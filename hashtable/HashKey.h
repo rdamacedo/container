@@ -17,22 +17,6 @@ struct KeyHash {
     }
 };
 
-struct StringKeyHash {
-    unsigned long operator()(const char *s, size_t table_size) const {
-        unsigned h = FIRSTH;
-        while (*s) {
-            h = (h * A) ^ (s[0] * B);
-            s++;
-        }
-        return h % table_size;
-    }
-};
-
-struct IntKeyHash {
-    unsigned long operator()(const int &k, size_t table_size) const {
-        return (unsigned long) (k % table_size);
-    }
-};
 
 struct FloatKeyHash {
     unsigned long operator()(const float &k, size_t table_size) const {

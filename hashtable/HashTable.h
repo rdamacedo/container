@@ -17,7 +17,7 @@ public:
             tableSize(tableSize) {
 
         table = (Entry<K, V> **) malloc(sizeof(Entry<K, V> *) * tableSize);
-        for (int i = 0; i < tableSize; i++) {
+        for (int i = 0; i < (int) tableSize; i++) {
             table[i] = NULL;
         }
 
@@ -25,7 +25,7 @@ public:
 
     HashTable() {
         table = (Entry<K, V> **) malloc(sizeof(Entry<K, V> *) * UINT64_MAX);
-        for (int i = 0; i < tableSize; i++) {
+        for (int i = 0; i < (int) tableSize; i++) {
             table[i] = NULL;
         }
     }
@@ -51,7 +51,7 @@ public:
         unsigned long hashValue = hashFunc(key, tableSize);
 
         int i = 0;
-        while (table[hashValue] != NULL && i < tableSize) {
+        while (table[hashValue] != NULL && i < (int) tableSize) {
             if (table[hashValue]->getKey() == key) {
                 value = table[hashValue]->getValue();
                 return true;
@@ -66,10 +66,9 @@ public:
 
     void put(const K &key, const V &value) {
         unsigned long hashValue = hashFunc(key, tableSize);
-        Entry<K, V> *entry = table[hashValue];
 
         int i = 0;
-        while (table[hashValue] != NULL && table[hashValue]->getKey() != key && i < tableSize) {
+        while (table[hashValue] != NULL && table[hashValue]->getKey() != key && i < (int) tableSize) {
             hashValue = (hashValue + 1) % tableSize;
             i++;
         }
@@ -81,7 +80,7 @@ public:
     }
 
     void remove(const K &key) {
-        unsigned long hashValue = hashFunc(key);
+        unsigned long hashValue = hashFunc(key, tableSize);
         Entry<K, V> *prev = NULL;
         Entry<K, V> *entry = table[hashValue];
 
@@ -112,9 +111,9 @@ private:
 
     const HashTable &operator=(const HashTable &other);
 
-    size_t tableSize;
     Entry<K, V> **table;
     F hashFunc;
+    size_t tableSize;
 };
 
 #endif //CONTAINERS_HASHTABLE_H

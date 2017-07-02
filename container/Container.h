@@ -33,6 +33,10 @@ public:
 
 
 private:
+    std::string _name;
+    InternalType _keyType;
+    InternalType _valueType;
+    size_t _tableSize;
     HashTable<std::string, std::string, KeyHash<std::string>> *stringStringTable;
     HashTable<std::string, float, KeyHash<std::string>> *stringFloatTable;
     HashTable<std::string, int, KeyHash<std::string>> *stringIntTable;
@@ -42,10 +46,6 @@ private:
     HashTable<int, float, KeyHash<int>> *intFloatTable;
     HashTable<int, int, KeyHash<int>> *intIntTable;
     HashTable<int, std::string, KeyHash<int>> *intStringTable;
-    InternalType _keyType;
-    InternalType _valueType;
-    size_t _tableSize;
-    std::string _name;
 
     Container(const Container &p);
 

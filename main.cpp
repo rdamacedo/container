@@ -26,6 +26,7 @@ int main(int argc, char **argv) {
             return 0;
         }
 
+        //TODO: Should be a hashtable of containers
         std::vector<std::string> command_vector;
         unsigned long command_size = split(line, command_vector, ' ');
 
@@ -98,7 +99,7 @@ int main(int argc, char **argv) {
                     break;
                 }
             }
-            printf("Container with name %s was erased.", command_vector[1]);
+            printf("Container with name %s was erased.", command_vector[1].c_str());
         }
         command_vector.clear();
     }
