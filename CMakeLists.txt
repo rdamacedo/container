@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 
 option(TESTING "Enable testing" ON)
+option(FORMAT "Enable formatting" ON)
 option(COV_HTML "Display html for coverage" ON)
 
 
@@ -55,9 +56,35 @@ string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 file(GLOB_RECURSE COV_SRCS "tests/*")
 
+
 if (TESTING)
     enable_testing()
     add_subdirectory(tests)
 endif ()
+
+
+if(FORMAT)
+    set(astyle_exe ${CMAKE_BINARY_DIR}/astyle/src/bin/astyle)
+    add_custom_command(OUTPUT ${astyle_exe}
+            COMMAND wget http://sourceforge.net/projects/astyle/files/astyle/astyle%202.05.1/astyle_2.05.1_linux.tar.gz -O /tmp/astyle.tar.gz
+            COMMAND tar -xvf /tmp/astyle.tar.gz
+            COMMAND cd astyle/src && make -f ../build/gcc/Makefile
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            )
+
+    add_custom_target(check_format
+            COMMAND scripts/format.sh ${astyle_exe} 0
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            DEPENDS ${astyle_exe}
+            VERBATIM
+            )
+
+    add_custom_target(format
+            COMMAND scripts/format.sh ${astyle_exe} 1
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            VERBATIM
+            DEPENDS ${astyle_exe}
+            )
+endif()
 
 add_executable(containers ${SOURCE_FILES})
