@@ -54,7 +54,7 @@ set(CMAKE_CXX_FLAGS
 
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-file(GLOB_RECURSE COV_SRCS "tests/*")
+file(GLOB_RECURSE COV_SRCS "hashtable/*")
 
 
 if (TESTING)
