@@ -4,7 +4,7 @@ astyle=$1
 format=$2
 format_wildcards="""
 ./hashtable/*.h
-./test/*.*pp
+./tests/*.*pp
 """
 
 #echo astyle: $astyle
