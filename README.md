@@ -1,4 +1,4 @@
-# Container
+# Container ![Build Status](https://travis-ci.org/rdamacedo/container.svg?branch=master)
 
 Container C++11 Implementation
 ------------------------------------
