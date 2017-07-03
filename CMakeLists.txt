@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 2.8)
 project(containers)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -36,7 +36,8 @@ set(CMAKE_CXX_FLAGS_PROFILE
 string(REPLACE ";" " " CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_PROFILE}")
 
 set(CMAKE_CXX_FLAGS
-        ${CMAKE_CXX_FLAGS}
+        -std=c++0x
+	${CMAKE_CXX_FLAGS}
         -Weffc++
         -Wno-sign-compare
         -Wall
@@ -45,11 +46,6 @@ set(CMAKE_CXX_FLAGS
         -Wpointer-arith
         -Wmissing-declarations
         -Wno-unused-parameter
-        -Werror=format-security
-        -Werror=array-bounds
-        -Werror=unused-variable
-        -Werror=uninitialized
-        -Werror=init-self
         -Wcast-qual
         -Wconversion
         -Wcast-align

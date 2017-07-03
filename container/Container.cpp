@@ -45,7 +45,7 @@ std::string Container::get_value(std::string &key) {
         float _key = (float) atof(key.c_str());
         int _val = -1;
         if (floatIntTable->get(_key, _val)) {
-            return std::to_string(_val);
+            return std::to_string((long long int)_val);
         }
         return "";
     } else if (_keyType == InternalType::FLOAT && _valueType == InternalType::STRING) {
@@ -57,7 +57,7 @@ std::string Container::get_value(std::string &key) {
         float _key = (float) atof(key.c_str());
         float _val = -1;
         if (floatFloatTable->get(_key, _val)) {
-            return std::to_string(_val);
+            return std::to_string((long double)_val);
         }
         return "";
     } else if (_keyType == InternalType::INT && _valueType == InternalType::STRING) {
@@ -69,14 +69,14 @@ std::string Container::get_value(std::string &key) {
         int _key = atoi(key.c_str());
         float _val = -1;
         if (intFloatTable->get(_key, _val)) {
-            return std::to_string(_val);
+            return std::to_string((long double)_val);
         }
         return "";
     } else if (_keyType == InternalType::INT && _valueType == InternalType::INT) {
         int _key = atoi(key.c_str());
         int _val = -1;
         if (intIntTable->get(_key, _val)) {
-            return std::to_string(_val);
+            return std::to_string((long long int)_val);
         }
         return "";
     } else if (_keyType == InternalType::STRING && _valueType == InternalType::STRING) {
@@ -86,13 +86,13 @@ std::string Container::get_value(std::string &key) {
     } else if (_keyType == InternalType::STRING && _valueType == InternalType::FLOAT) {
         float _val = -1;
         if (stringFloatTable->get(key, _val)) {
-            return std::to_string(_val);
+            return std::to_string((long double)_val);
         }
         return "";
     } else if (_keyType == InternalType::STRING && _valueType == InternalType::INT) {
         int _val = -1;
         if (stringIntTable->get(key, _val)) {
-            return std::to_string(_val);
+            return std::to_string((long long int)_val);
         }
         return "";
     }

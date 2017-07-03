@@ -20,7 +20,7 @@ struct KeyHash {
 
 struct FloatKeyHash {
     unsigned long operator()(const float &k, size_t table_size) const {
-        std::string s = std::to_string(k);
+        std::string s = std::to_string((long double)k);
         std::hash<std::string> hash;
         return (unsigned long) hash(s) % table_size;
     }

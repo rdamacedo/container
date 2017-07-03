@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
-
+#include <algorithm>
 
 const static std::string EXIT = "exit";
 const static std::string ADD = "ADD";
