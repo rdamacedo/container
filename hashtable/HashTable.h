@@ -12,9 +12,9 @@ template<typename K, typename V, typename F>
 class HashTable {
 public:
     HashTable(size_t tableSize) :
-            table(),
-            hashFunc(),
-            tableSize(tableSize) {
+        table(),
+        hashFunc(),
+        tableSize(tableSize) {
 
         table = (Entry<K, V> **) malloc(sizeof(Entry<K, V> *) * tableSize);
         for (int i = 0; i < (int) tableSize; i++) {
