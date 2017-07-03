@@ -1,5 +1,5 @@
-# Container ![Build Status](https://travis-ci.org/rdamacedo/container.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/rdamacedo/container/badge.svg?branch=master)](https://coveralls.io/github/rdamacedo/container?branch=master)
+# Container 
+![Build Status](https://travis-ci.org/rdamacedo/container.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/rdamacedo/container/badge.svg?branch=master)](https://coveralls.io/github/rdamacedo/container?branch=master)
 
 Container C++11 Implementation
 ------------------------------------
