@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <iostream>
 #include "../hashtable/HashTable.h"
 #include "../utils/Utils.h"
 

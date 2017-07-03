@@ -23,13 +23,6 @@ public:
 
     }
 
-    HashTable() {
-        table = (Entry<K, V> **) malloc(sizeof(Entry<K, V> *) * UINT64_MAX);
-        for (int i = 0; i < (int) tableSize; i++) {
-            table[i] = NULL;
-        }
-    }
-
     ~HashTable() {
         // destroy all buckets one by one
         for (size_t i = 0; i < tableSize; ++i) {
