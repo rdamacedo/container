@@ -6,16 +6,16 @@ set(CMAKE_CXX_STANDARD 11)
 
 option(TESTING "Enable testing" ON)
 option(FORMAT "Enable formatting" ON)
-option(COV_HTML "Display html for coverage" OFF)
+option(COV_HTML "Display html for coverage" ON)
 
 
 set(SOURCE_FILES main.cpp
-                    utils/Utils.cpp utils/Utils.h
-                    container/Container.cpp
-                    container/Container.h
-                    hashtable/Entry.h
-                    hashtable/HashTable.h
-                    hashtable/HashKey.h)
+        utils/Utils.cpp utils/Utils.h
+        container/Container.cpp
+        container/Container.h
+        hashtable/Entry.h
+        hashtable/HashTable.h
+        hashtable/HashKey.h)
 
 set(CMAKE_CXX_FLAGS_PROFILE
         ${CMAKE_CXX_FLAGS_DEBUG}
@@ -49,9 +49,11 @@ set(CMAKE_CXX_FLAGS
 
 string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-if(TESTING)
+file(GLOB_RECURSE COV_SRCS "hashtable/*")
+
+if (TESTING)
     enable_testing()
     add_subdirectory(tests)
-endif()
+endif ()
 
 add_executable(containers ${SOURCE_FILES})
